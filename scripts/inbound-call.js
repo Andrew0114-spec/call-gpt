@@ -21,8 +21,8 @@ async function makeInboundCall() {
   await client.calls
     .create({
       twiml: twiml.toString(),
+      from: process.env.FROM_NUMBER,
       to: process.env.APP_NUMBER,
-      from: process.env.FROM_NUMBER
     })
     .then(call => console.log(call.sid));
 }  
