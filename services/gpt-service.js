@@ -27,27 +27,6 @@ class GptService extends EventEmitter {
   setCallSid (callSid) {
     this.userContext.push({ 'role': 'system', 'content': `callSid: ${callSid}` });
   }
-
-  validateFunctionArgs (args) {
-    try {
-      return JSON.parse(args);
-    } catch (error) {
-      console.log('Warning: Double function arguments returned by OpenAI:', args);
-      // Seeing an error where sometimes we have two sets of args
-      if (args.indexOf('{') != args.lastIndexOf('{')) {
-        return JSON.parse(args.substring(args.indexOf(''), args.indexOf('}') + 1));
-      }
-    }
-  }
-
-  updateUserContext(name, role, text) {
-    if (name !== 'user') {
-      this.userContext.push({ 'role': role, 'name': name, 'content': text });
-    } else {
-      this.userContext.push({ 'role': role, 'content': text });
-    }
-  }
-
   async completion(text, interactionCount, role = 'user', name = 'user') {
     this.updateUserContext(name, role, text);
 
@@ -133,6 +112,27 @@ class GptService extends EventEmitter {
     this.userContext.push({'role': 'assistant', 'content': completeResponse});
     console.log(`GPT -> user context length: ${this.userContext.length}`.green);
   }
+
+  validateFunctionArgs (args) {
+    try {
+      return JSON.parse(args);
+    } catch (error) {
+      console.log('Warning: Double function arguments returned by OpenAI:', args);
+      // Seeing an error where sometimes we have two sets of args
+      if (args.indexOf('{') != args.lastIndexOf('{')) {
+        return JSON.parse(args.substring(args.indexOf(''), args.indexOf('}') + 1));
+      }
+    }
+  }
+
+  updateUserContext(name, role, text) {
+    if (name !== 'user') {
+      this.userContext.push({ 'role': role, 'name': name, 'content': text });
+    } else {
+      this.userContext.push({ 'role': role, 'content': text });
+    }
+  }
+
 }
 
 module.exports = { GptService };

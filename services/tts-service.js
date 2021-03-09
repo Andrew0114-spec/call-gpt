@@ -9,7 +9,6 @@ class TextToSpeechService extends EventEmitter {
     this.nextExpectedIndex = 0;
     this.speechBuffer = {};
   }
-
   async generate(gptReply, interactionCount) {
     const { partialResponseIndex, partialResponse } = gptReply;
 

@@ -13,25 +13,6 @@ class StreamService extends EventEmitter {
   setStreamSid (streamSid) {
     this.streamSid = streamSid;
   }
-
-  buffer (index, audio) {
-    // Escape hatch for intro message, which doesn't have an index
-    if(index === null) {
-      this.sendAudio(audio);
-    } else if(index === this.expectedAudioIndex) {
-      this.sendAudio(audio);
-      this.expectedAudioIndex++;
-
-      while(Object.prototype.hasOwnProperty.call(this.audioBuffer, this.expectedAudioIndex)) {
-        const bufferedAudio = this.audioBuffer[this.expectedAudioIndex];
-        this.sendAudio(bufferedAudio);
-        this.expectedAudioIndex++;
-      }
-    } else {
-      this.audioBuffer[index] = audio;
-    }
-  }
-
   sendAudio (audio) {
     this.ws.send(
       JSON.stringify({
@@ -55,6 +36,25 @@ class StreamService extends EventEmitter {
     );
     this.emit('audiosent', markLabel);
   }
+
+  buffer (index, audio) {
+    // Escape hatch for intro message, which doesn't have an index
+    if(index === null) {
+      this.sendAudio(audio);
+    } else if(index === this.expectedAudioIndex) {
+      this.sendAudio(audio);
+      this.expectedAudioIndex++;
+
+      while(Object.prototype.hasOwnProperty.call(this.audioBuffer, this.expectedAudioIndex)) {
+        const bufferedAudio = this.audioBuffer[this.expectedAudioIndex];
+        this.sendAudio(bufferedAudio);
+        this.expectedAudioIndex++;
+      }
+    } else {
+      this.audioBuffer[index] = audio;
+    }
+  }
+
 }
 
 module.exports = {StreamService};
