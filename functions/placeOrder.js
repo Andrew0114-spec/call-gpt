@@ -4,7 +4,6 @@ async function placeOrder(functionArgs) {
   
   // generate a random order number that is 7 digits 
   const orderNum = Math.floor(Math.random() * (9999999 - 1000000 + 1) + 1000000);
-
   // check model and return the order number and price with 7.9% sales tax
   if (model?.toLowerCase().includes('pro')) {
     return JSON.stringify({ orderNumber: orderNum, price: Math.floor(quantity * 249 * 1.079)});
